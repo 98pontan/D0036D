@@ -12,8 +12,8 @@ import java.util.Observer;
 public class Grid extends Observable
 {
    public GridSquares[][] gridList;
-   private GridSquares startLocation;
-   public GridSquares currentLocation;
+   private GridSquares[] startLocation;
+   public GridSquares[] currentLocation;
    int columns;
    int rows;
    private GridSquares square;
@@ -30,6 +30,7 @@ public class Grid extends Observable
          for (int j = 0; j < columns; j++){
             gridList[i][j] = new GridSquares(i+x, j+y, Color.BLUE);
             y += 3;
+            System.out.println(x);
             System.out.println(gridList[i][j].posX);
          }
          y = 0;
@@ -40,8 +41,9 @@ public class Grid extends Observable
    public boolean placePlayer(GridSquares[] player){
       return true;
    }
-   public void firstLocation(GridSquares g) {
-      startLocation = g;
+
+   public void firstLocation(GridSquares[] gridSquares) {
+      startLocation = gridSquares;
       currentLocation = startLocation;
    }
    public void colorChanger(int i)
