@@ -11,14 +11,18 @@ public class GridSquares
    public Color color;
    public int posX;
    public int posY;
+   public int indexX;
+   public int indexY;
    public int dx = 3;
    public int dy = 3;
 
 
-   public GridSquares(int posX, int posY, Color color){
+   public GridSquares(int posX, int posY, Color color, int indexX, int indexY){
       this.posX = posX;
       this.posY = posY;
       this.color = color;
+      this.indexX = indexX;
+      this.indexY = indexY;
 
    }
 }
