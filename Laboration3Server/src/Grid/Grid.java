@@ -1,7 +1,6 @@
 package Grid;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,10 +17,10 @@ public class Grid extends Observable
    public GridSquares[][] gridList;
    private GridSquares[] startLocation;
    public GridSquares[] currentLocation;
-   private Client client;
    int columns;
    int rows;
    boolean placed;
+   boolean messagePlayerPlaced = false;
    private GridSquares square;
 
    public Grid(int columns, int rows, Color boardColor, Color playerColor)
@@ -91,7 +90,7 @@ public class Grid extends Observable
       notifyObservers();
    }
 
-   public void movePlayer(int i) throws IOException
+   public void movePlayer(int i)
    {
       final int CENTERPOSITIONINDEX = 0;
 
@@ -99,50 +98,60 @@ public class Grid extends Observable
       for (int k = 1; k < currentLocation.length; k++){
          gridList[currentLocation[k].posX][currentLocation[k].posY].color = boardColor;
       }
+      System.out.println("HEJ");
       switch (i) {
          //Right
          case 0:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX + 1, currentLocation[CENTERPOSITIONINDEX].posY, playerColor);
-            new Client(String.valueOf((currentLocation[CENTERPOSITIONINDEX].posX + 1)), String.valueOf((currentLocation[CENTERPOSITIONINDEX].posY)), "BLUE");
+            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX + 1, currentLocation[CENTERPOSITIONINDEX].posY);
             setChanged();
             notifyObservers();
             break;
 
          //Down
          case 1:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY + 1, playerColor);
-            new Client(String.valueOf(currentLocation[CENTERPOSITIONINDEX].posX), String.valueOf((currentLocation[CENTERPOSITIONINDEX].posY+1)), "BLUE");
+            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY + 1);
             setChanged();
             notifyObservers();
             break;
 
          //Left
          case 2:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX - 1, currentLocation[CENTERPOSITIONINDEX].posY, playerColor);
-            new Client(String.valueOf((currentLocation[CENTERPOSITIONINDEX].posX - 1)), String.valueOf(currentLocation[CENTERPOSITIONINDEX].posY), "BLUE");
+            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX - 1, currentLocation[CENTERPOSITIONINDEX].posY);
             setChanged();
             notifyObservers();
             break;
 
          //Up
          case 3:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY - 1, playerColor);
-            new Client(String.valueOf(currentLocation[CENTERPOSITIONINDEX].posX), String.valueOf(currentLocation[CENTERPOSITIONINDEX].posY -1), "BLUE");
+            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY - 1);
             setChanged();
             notifyObservers();
             break;
       }
    }
+   public void placePlayerCommunication(int x, int y, Color c)
+   {
+      if (messagePlayerPlaced) {
+         System.out.println("clean board");
+         for (int k = 1; k < currentLocation.length; k++) {
 
+            gridList[currentLocation[k].posX][currentLocation[k].posY].color = boardColor;
+         }
+      }
+      System.out.println("placePlayerCom");
+      playerColor = c;
+      firstLocation(playerStartPosition(x, y));
+      messagePlayerPlaced = true;
+   }
    /**
     * Sets up the start position for the player
     * @param middlePositionX
     * @param middlePositionY
-    * @param playerColor
+
     * @return
     */
 
-   public GridSquares[] playerStartPosition(int middlePositionX, int middlePositionY, Color playerColor)
+   public GridSquares[] playerStartPosition(int middlePositionX, int middlePositionY)
    {
       GridSquares[] gridSquares;
       gridSquares = new GridSquares[9];

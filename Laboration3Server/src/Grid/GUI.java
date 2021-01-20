@@ -27,7 +27,7 @@ public class GUI implements Observer
     *
     * @param grid
     */
-   public GUI(Grid grid)
+   public GUI(Grid grid) throws IOException
    {
       this.gr = grid;
       gs = new Draw[gr.rows][gr.columns];
@@ -82,9 +82,10 @@ public class GUI implements Observer
                   gr.placed = false;
                }
                gs[i][j].drawSquares(g);
-            }// end for j
-         }// end for i
-      } // end paintComponent
+            }
+         }
+        // g.setColor(Color.BLACK);
+      }
 
       private class Listener implements KeyListener
       {
@@ -94,38 +95,22 @@ public class GUI implements Observer
 
             //Right
             if (key == KeyEvent.VK_RIGHT && gr.placePlayer(0)) {
-               try {
-                  gr.movePlayer(0);
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
+               gr.movePlayer(0);
             }
 
             //Down
             if (key == KeyEvent.VK_DOWN && gr.placePlayer(1)) {
-               try {
-                  gr.movePlayer(1);
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
+               gr.movePlayer(1);
             }
 
             //Left
             if (key == KeyEvent.VK_LEFT && gr.placePlayer(2)) {
-               try {
-                  gr.movePlayer(2);
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
+               gr.movePlayer(2);
             }
 
             //Up
             if (key == KeyEvent.VK_UP && gr.placePlayer(3)) {
-               try {
-                  gr.movePlayer(3);
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
+               gr.movePlayer(3);
             }
          }
 

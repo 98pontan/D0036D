@@ -59,7 +59,7 @@ public class Model
       }.newInstance();
       try {
          DocumentBuilder builder = factory.newDocumentBuilder();
-         Document doc = builder.parse("location.xml");
+         Document doc = builder.parse("Laboration2/src/location.xml");
 
          NodeList koordinatesList = doc.getElementsByTagName("location");
          NodeList locationList = doc.getElementsByTagName("locality");
