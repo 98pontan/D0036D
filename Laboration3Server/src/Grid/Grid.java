@@ -21,7 +21,6 @@ public class Grid extends Observable
    int rows;
    boolean placed;
    boolean messagePlayerPlaced = false;
-   private GridSquares square;
 
    public Grid(int columns, int rows, Color boardColor, Color playerColor)
    {
@@ -129,7 +128,7 @@ public class Grid extends Observable
             break;
       }
    }
-   public void placePlayerCommunication(int x, int y, Color c)
+   public void placePlayerCommunication(int x, int y, int colorNum)
    {
       if (messagePlayerPlaced) {
          System.out.println("clean board");
@@ -138,8 +137,32 @@ public class Grid extends Observable
             gridList[currentLocation[k].posX][currentLocation[k].posY].color = boardColor;
          }
       }
+      switch (colorNum){
+         case 1:
+            playerColor = Color.BLUE;
+            break;
+         case 2:
+            playerColor = Color.GREEN;
+            break;
+         case 3:
+            playerColor = Color.ORANGE;
+            break;
+         case 4:
+            playerColor = Color.MAGENTA;
+            break;
+         case 5:
+            playerColor = Color.CYAN;
+            break;
+         case 6:
+            playerColor = Color.RED;
+            break;
+         case 7:
+            playerColor = Color.PINK;
+         case 8:
+            playerColor = Color.YELLOW;
+            break;
+      }
       System.out.println("placePlayerCom");
-      playerColor = c;
       firstLocation(playerStartPosition(x, y));
       messagePlayerPlaced = true;
    }

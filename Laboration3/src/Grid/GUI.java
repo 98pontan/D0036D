@@ -3,6 +3,7 @@ package Grid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -42,7 +43,6 @@ public class GUI implements Observer
       JFrame frame = new JFrame();
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       d = new Display(displaySizeX, displaySizeY);
-
       frame.getContentPane().add(d);
       frame.pack();
       frame.setLocation(0, 0);
@@ -65,6 +65,9 @@ public class GUI implements Observer
          addKeyListener(new Listener());
          setPreferredSize(new Dimension(20 + x, 20 + y));
          setFocusable(true);
+         //JPanel panel = new JPanel();
+
+
       }
 
       @Override

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 /**
  * 1. Creates an 2D array of GridSquares
@@ -18,11 +19,9 @@ public class Grid extends Observable
    public GridSquares[][] gridList;
    private GridSquares[] startLocation;
    public GridSquares[] currentLocation;
-   private Client client;
    int columns;
    int rows;
    boolean placed;
-   private GridSquares square;
 
    public Grid(int columns, int rows, Color boardColor, Color playerColor)
    {
@@ -49,29 +48,34 @@ public class Grid extends Observable
    public boolean placePlayer(int i)
    {
       final int CENTERPOSITIONINDEX = 0;
+      int posX;
+      int posY;
+
+      posX = currentLocation[CENTERPOSITIONINDEX].posX;
+      posY = currentLocation[CENTERPOSITIONINDEX].posY;
 
       switch (i) {
          //Right
          case 0:
-            if (currentLocation[CENTERPOSITIONINDEX].posX + 3 == gridList.length)
+            if (posX  + 3 == gridList.length)
                return false;
             break;
 
          //Down
          case 1:
-            if (currentLocation[CENTERPOSITIONINDEX].posY + 3 == gridList.length)
+            if (posY + 3 == gridList.length)
                return false;
             break;
 
          //Left
          case 2:
-            if (currentLocation[CENTERPOSITIONINDEX].posX - 2 == 0)
+            if (posX - 2 == 0)
                return false;
             break;
 
          //Up
          case 3:
-            if (currentLocation[CENTERPOSITIONINDEX].posY - 2 == 0)
+            if (posY - 2 == 0)
                return false;
             break;
       }
@@ -94,40 +98,68 @@ public class Grid extends Observable
    public void movePlayer(int i) throws IOException
    {
       final int CENTERPOSITIONINDEX = 0;
+      String serverPlayerColor;
+      Random random = new Random();
+      int posX;
+      int posY;
+      String tempX;
+      String tempY;
+
+      posX = currentLocation[CENTERPOSITIONINDEX].posX;
+      posY = currentLocation[CENTERPOSITIONINDEX].posY;
 
       placed = true;
-      for (int k = 1; k < currentLocation.length; k++){
+
+      serverPlayerColor = String.valueOf((random.nextInt(6)+1));
+
+      for (int k = 1; k < currentLocation.length; k++)
          gridList[currentLocation[k].posX][currentLocation[k].posY].color = boardColor;
-      }
+
       switch (i) {
          //Right
          case 0:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX + 1, currentLocation[CENTERPOSITIONINDEX].posY, playerColor);
-            new Client(String.valueOf((currentLocation[CENTERPOSITIONINDEX].posX + 1)), String.valueOf((currentLocation[CENTERPOSITIONINDEX].posY)), "BLUE");
+            posX +=1;
+            tempX = Integer.toString(posX);
+            tempY = Integer.toString(posY);
+            currentLocation = playerStartPosition(posX, posY, playerColor);
+            new Client(tempX, tempY, serverPlayerColor);
+
             setChanged();
             notifyObservers();
             break;
 
          //Down
          case 1:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY + 1, playerColor);
-            new Client(String.valueOf(currentLocation[CENTERPOSITIONINDEX].posX), String.valueOf((currentLocation[CENTERPOSITIONINDEX].posY+1)), "BLUE");
+            posY +=1;
+            tempX = Integer.toString(posX);
+            tempY = Integer.toString(posY);
+            currentLocation = playerStartPosition(posX, posY, playerColor);
+            new Client(tempX, tempY, serverPlayerColor);
+
             setChanged();
             notifyObservers();
             break;
 
          //Left
          case 2:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX - 1, currentLocation[CENTERPOSITIONINDEX].posY, playerColor);
-            new Client(String.valueOf((currentLocation[CENTERPOSITIONINDEX].posX - 1)), String.valueOf(currentLocation[CENTERPOSITIONINDEX].posY), "BLUE");
+            posX -=1;
+            tempX = Integer.toString(posX);
+            tempY = Integer.toString(posY);
+            currentLocation = playerStartPosition(posX, posY, playerColor);
+            new Client(tempX, tempY, serverPlayerColor);
+
             setChanged();
             notifyObservers();
             break;
 
          //Up
          case 3:
-            currentLocation = playerStartPosition(currentLocation[CENTERPOSITIONINDEX].posX, currentLocation[CENTERPOSITIONINDEX].posY - 1, playerColor);
-            new Client(String.valueOf(currentLocation[CENTERPOSITIONINDEX].posX), String.valueOf(currentLocation[CENTERPOSITIONINDEX].posY -1), "BLUE");
+            posY -= 1;
+            tempX = Integer.toString(posX);
+            tempY = Integer.toString(posY);
+            currentLocation = playerStartPosition(posX, posY, playerColor);
+            new Client(tempX, tempY, serverPlayerColor);
+
             setChanged();
             notifyObservers();
             break;

@@ -15,7 +15,7 @@ public class Controller extends Model {
     * Iniziates the hashmaps for each location by using model to get the location
     * and then calling API to fill the HashMap.
     */
-   public static void iniziateHashMaps() {
+   public Controller() {
 
       flag = 1;
       parse("Kage");
@@ -75,7 +75,7 @@ public class Controller extends Model {
               new java.util.TimerTask() {
                  @Override
                  public void run() {
-                    Controller.iniziateHashMaps();
+                    new Controller();
                  }
               },
               updateTimeI * 60000);

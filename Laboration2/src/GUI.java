@@ -35,13 +35,13 @@ public class GUI
 
    private static JTextField givenTime = new JTextField(); //Shows the time the user selected
    private static JTextField selectionTitle = new JTextField("Choose Time"); //Title for the button that users use to selec time
-   private static JComboBox comboBox = new JComboBox(); //The combobox that users schrool through to select time
+   private static JComboBox<String> comboBox = new JComboBox<>(); //The combobox that users schrool through to select time
    private static int count = 0; // a counter for adding the diffrent times into the combobox
 
     /**Initiates the GUI and adds text to function as titles for location and temperature, also adds scrollbar
      * and update button with a textfield above the button to take input.
      */
-   public static void initiateGUI() {
+   public GUI() {
       JPanel panel = new JPanel();
       JFrame frame = new JFrame();
 
@@ -101,7 +101,7 @@ public class GUI
          @Override
          public void actionPerformed(ActionEvent e) {
             weatherLocation.setText("Kage");
-            temperature = Controller.getTemp(Controller.weatherTimeAndTempKage);
+            temperature = Controller.getTemp(Model.weatherTimeAndTempKage);
             weatherTemp.setText(temperature);
          }
       });

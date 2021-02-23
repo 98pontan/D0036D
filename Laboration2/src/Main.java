@@ -7,8 +7,8 @@
 public class Main
 {
    public static void main(String[] args) {
-      GUI.initiateGUI();
-      Controller.iniziateHashMaps();
+      new GUI();
+      new Controller();
 
    }
 }

@@ -39,21 +39,23 @@ public class Server
 
    public void decodeCommunication(String message, Grid grid)
    {
-      int x = 0;
-      int y = 0;
-
-      Color c;
+      int posX = 0;
+      int posY = 0;
+      int colorNum = 0;
       String[] splitMessage;
 
       try {
          splitMessage = message.split(":");
-         x = Integer.parseInt(splitMessage[0]);
-         y = Integer.parseInt(splitMessage[1]);
+         posX = Integer.parseInt(splitMessage[0]);
+         posY = Integer.parseInt(splitMessage[1]);
+         colorNum = Integer.parseInt(splitMessage[2]);
+
       } catch (Exception e){
          System.out.println("ERROR");
       }
-      if (x <= 1 || x >= 199 || y <= 1 || y >= 199)
+      if (posX <= 1 || posX >= 199 || posY <= 1 || posY >= 199)
          return;
-     grid.placePlayerCommunication(x, y, Color.BLUE);
+
+     grid.placePlayerCommunication(posX, posY, colorNum);
    }
 }
