@@ -8,7 +8,7 @@ import java.net.*;
 
 public class Server
 {
-
+   
 
    public Server(Grid grid) throws IOException
    {
