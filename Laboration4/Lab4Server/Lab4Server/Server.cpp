@@ -29,7 +29,7 @@ void Server::initiate(int portNum, int maxClients)
 	WSADATA wsdata;
 	int wsCheck;
 	WORD ver;
-	int connected;
+	//int connected;
 	sockaddr_in server;
 	sockaddr_in client;
 	JoinMsg jMsg;
@@ -83,7 +83,7 @@ void Server::initiate(int portNum, int maxClients)
 			char buffer[256] = { '\0*' };
 			recv(clientSocket, buffer, sizeof(buffer), 0);
 			memcpy(&jMsg, buffer, buffer[0]);
-			char buffer[255] = { '\0*' };
+			buffer[255] = { '\0*' };
 
 			std::cout << jMsg.name << "has joined the server" << std::endl;
 
@@ -96,7 +96,7 @@ void Server::initiate(int portNum, int maxClients)
 			if (numberOfClients == maxClients)
 				start();
 
-			else if (endGame)
+			if (endGame)
 				break;
 		}
 	}
@@ -110,23 +110,24 @@ void Server::start() {
 	fd_set readSet;
 	timeval time;
 	Coordinate coordinate;
-	SOCKET client;
-	MsgHead msgHead;
 
+
+
+	Sleep(100);
 	std::cout << "Welcome to the game!" << std::endl;
 
 	grid = new GameGrid();
 
 	response.type = Change;
 
-	for (int i = 0; i < numberOfClients; i++) 
+	for (int i = 0; i < numberOfClients; i++)
 	{
 		id = i + 1;
-		
-		startX = (rand() % 196)+2;
-		startY = (rand() % 196)+2;
 
-		
+		startX = (rand() % 196) + 2;
+		startY = (rand() % 196) + 2;
+
+
 		coordinate.x = startX;
 		coordinate.y = startY;
 
@@ -134,7 +135,7 @@ void Server::start() {
 		playerStates.push_back(stateID);
 
 		grid->movePlayer(coordinate);
-		
+
 		sendNewPosMsg(&id, &coordinate);
 
 	}
@@ -147,36 +148,74 @@ void Server::start() {
 		for (int i = 0; i < clientSockets.size(); i++) {
 
 			FD_ZERO(&readSet);
-			client = clientSockets.at(i).second;
-			FD_SET(client, &readSet);
+			SOCKET clientSocket = clientSockets.at(i).second;
+			FD_SET(clientSocket, &readSet);
 
 			time.tv_sec = 0;
 			time.tv_usec = 0;
 
 			int readySocketHandles = select(0, &readSet, NULL, NULL, &time);
 
-			if (client, &readSet) {
-				recv(client, buffer, sizeof(buffer), 0);
+			if (FD_ISSET(clientSocket, &readSet)) {
+				MsgHead msgHead;
+				recv(clientSocket, buffer, sizeof(buffer), 0);
 				memcpy(&msgHead, buffer, sizeof(msgHead));
 
 				response.seq_no++;
 
 				switch (msgHead.type)
 				{
-				case Event:
+				case Event: {
 					MoveEvent move;
-					clientID = move.event.head.id;
 					memcpy(&move, buffer, sizeof(move));
+					clientID = move.event.head.id;
+					
 
-					if(currentState)
+					if (currentState(&clientID)) {
+						Coordinate savedMove = move.pos;
+						//Coordinate cord = convertToGrid(&move.pos);
+						bool availableMove = grid->movePlayer(savedMove);
+
+						if (availableMove) {
+							sendNewPosMsg(&clientID, &savedMove);
+
+
+						}
+
+						else {
+							playerLost(&clientID);
+							std::cout << "Client " << clientID << " has lost!" << std::endl;
+
+						}
+
+					}
 					break;
 				}
-			}
-		}
-		
-	}
-	
 
+				case Leave: {
+					LeaveMsg leaveMsg;
+					memcpy(&leaveMsg, buffer, sizeof(leaveMsg));
+					clientID = leaveMsg.head.id;
+					sendPlayerLeftMsg(&clientID);
+					disconnectPlayer(&clientID);
+					numberOfClients--;
+
+					if (numberOfClients == 0) {
+						shutDown();
+					}
+					break;
+				}
+				}//end if FD_ISSET
+			}//end for
+
+		}
+
+		if (endGame) {
+			break;
+		}
+
+
+	}
 }
 
 void Server::sendNewPlayerMsg(unsigned int* id, const char* name) 
@@ -223,7 +262,7 @@ void Server::sendNewPosMsg(int* id, Coordinate* pos) {
 	}
 }
 
-void Server::sendPlayerLeft(int* id) 
+void Server::sendPlayerLeftMsg(int* id) 
 {
 	ChangeMsg changeMsg;
 	PlayerLeaveMsg plMsg;
@@ -242,4 +281,43 @@ void Server::sendPlayerLeft(int* id)
 		response.seq_no++;
 	}
 
+}
+
+bool Server::currentState(int* id) {
+	for (int i = 0; i < playerStates.size(); i++) {
+		if (playerStates.at(i).first == *id) {
+			return playerStates.at(i).second;
+		}
+	}
+
+	return false;
+}
+
+// sets a player as inactive
+void Server::playerLost(int* id) {
+	for (int i = 0; i < playerStates.size(); i++) {
+		if (playerStates.at(i).first == *id) {
+			playerStates.at(i).second = false;
+		}
+	}
+}
+
+void Server::disconnectPlayer(int* id) {
+	for (int i = 0; i < clientSockets.size(); i++) {
+		if (clientSockets.at(i).first == *id) {
+			int clientSocket = clientSockets.at(i).second;
+			closesocket(clientSocket);
+			clientSockets.erase(clientSockets.begin() + i);
+		}
+	}
+}
+
+/*
+ closing down socket and cleanup
+*/
+void Server::shutDown() {
+	closesocket(s);
+	WSACleanup();
+	delete(grid);
+	endGame = true;
 }

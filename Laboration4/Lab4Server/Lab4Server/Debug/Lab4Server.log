@@ -1,0 +1,8 @@
+﻿  GameGrid.cpp
+  Server.cpp
+C:\Users\pontu\Downloads\Labbar\D0036D\Laboration4\Lab4Server\Lab4Server\Server.cpp(148,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\pontu\Downloads\Labbar\D0036D\Laboration4\Lab4Server\Lab4Server\Server.cpp(287,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\pontu\Downloads\Labbar\D0036D\Laboration4\Lab4Server\Lab4Server\Server.cpp(298,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\pontu\Downloads\Labbar\D0036D\Laboration4\Lab4Server\Lab4Server\Server.cpp(306,20): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Lab4Server.vcxproj -> C:\Users\pontu\Downloads\Labbar\D0036D\Laboration4\Lab4Server\Lab4Server\Debug\Lab4Server.exe
