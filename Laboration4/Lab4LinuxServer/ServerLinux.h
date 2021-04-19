@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
-#include "Protocol.h"
+#include "GameProtocol.h"
 #include <thread>
 #include <vector>
 #include <string>
@@ -17,27 +17,32 @@
 class GameGrid {
 
 private:
-
+	bool** grid;
 
 
 public:
 	bool movePlayer(Coordinate position);
 	GameGrid();
+	~GameGrid();
 
 };
 
 class Server {
 private:
-	SOCKET s;
+	//SOCKET serverSocket;
 	bool endGame;
+
 public:
 	void initiate(int portNum, int maxClients);
 	void start();
 	void shutDown();
 	void sendNewPlayerMsg(unsigned int* id, const char* name);
 	void sendNewPosMsg(int* id, Coordinate* pos);
-	void sendPlayerLeft(int* id);
+	void sendPlayerLeftMsg(int* id);
+	void playerLost(int* id);
+	void disconnectPlayer(int* id);
 	bool currentState(int* id);
+
 
 
 
